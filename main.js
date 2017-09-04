@@ -3,6 +3,8 @@
 const Gtk = imports.gi.Gtk;
 const Lang = imports.lang;
 
+var cookies = 0;
+
 const WelcomeToTheGrid = new Lang.Class({
     Name: 'Welcome to the Grid',
 
@@ -25,8 +27,6 @@ const WelcomeToTheGrid = new Lang.Class({
         this._buildUI ();
     },
 
-
-
     // Build the application's UI
     _buildUI: function() {
 
@@ -34,49 +34,38 @@ const WelcomeToTheGrid = new Lang.Class({
         this._window = new Gtk.ApplicationWindow({
             application: this.application,
             window_position: Gtk.WindowPosition.CENTER,
-            border_width: 10,
-            title: "Welcome to the Grid"});
+            default_height: 200,
+            default_width: 400,
+            title: "Click the button to get a cookie!"});
 
         // Create the Grid
         this._grid = new Gtk.Grid ({
-            column_homogeneous: true,
-            column_spacing: 20,
+            halign: Gtk.Align.CENTER,
+            valign: Gtk.Align.CENTER,
             row_spacing: 20 });
 
-        // Create an image
-        this._image = new Gtk.Image ({ file: "gnome-logo-icon.png" });
+        this._cookieLabel = new Gtk.Label ({
+            label: "Number of cookies: " + cookies});
 
-        // Create a second image using a stock icon
-        this._icon = new Gtk.Image ({ stock: '' });
+        this._cookiebutton = new Gtk.Button ({
+            label: "Get a cookie"
+        })
 
-        // Create a label
-        this._label = new Gtk.Label ({
-            label: "Welcome to GNOME, too!",
-            /* margin_top: 20 */ });
+        this._cookiebutton.connect ('clicked', Lang.bind (this, this._getACookie));
 
-        /* Create a second label
-        this._labelTwo = new Gtk.Label ({
-            label: "The cake is a pie." }); */
-
-        /* Create a button
-        this._button = new Gtk.Button ({
-            label: "Welcome to GNOME, too!"}); */
-
-        // Attach the images and button to the grid
-        this._grid.attach (this._image,  0, 0, 2, 1);
-        this._grid.attach (this._icon,   0, 1, 1, 1);
-        this._grid.attach (this._label,  1, 1, 1, 1);
-
-        // this._grid.attach (this._label, 0, 1, 1, 1);
-        // this._grid.attach (this._labelTwo, 1, 1, 1, 1);
-
-        // this._grid.attach (this._button, 1, 1, 1, 1);
+        this._grid.attach(this._cookieLabel, 0, 0, 1, 1);
+        this._grid.attach(this._cookiebutton, 0, 1, 1, 1);
 
         // Add the grid to the window
         this._window.add (this._grid);
 
         // Show the window and all child widgets
         this._window.show_all();
+    },
+
+    _getACookie: function() {
+        cookies ++;
+        this._cookieLabel.set_label("Number of cookies: " + cookies);
     }
 
 });
