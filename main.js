@@ -42,19 +42,32 @@ const WelcomeToTheGrid = new Lang.Class({
         this._grid = new Gtk.Grid ({
             halign: Gtk.Align.CENTER,
             valign: Gtk.Align.CENTER,
-            row_spacing: 20 });
+            row_spacing: 20
+        });
 
         this._cookieLabel = new Gtk.Label ({
-            label: "Number of cookies: " + cookies});
+            label: "Number of cookies: " + cookies
+        });
 
         this._cookiebutton = new Gtk.Button ({
             label: "Get a cookie"
-        })
+        });
 
         this._cookiebutton.connect ('clicked', Lang.bind (this, this._getACookie));
 
-        this._grid.attach(this._cookieLabel, 0, 0, 1, 1);
-        this._grid.attach(this._cookiebutton, 0, 1, 1, 1);
+        this._switchlabel = new Gtk.Label({
+            label: "Cooke dispenser"
+        });
+
+        this._cookieswitch = new Gtk.Switch({
+            active: true,
+        });
+        this._cookieswitch.connect ('notify::active', Lang.bind(this, this._cookieDispenser));
+
+        this._grid.attach(this._cookiebutton, 0, 0, 1, 1);
+        this._grid.attach(this._switchlabel, 0, 1, 1, 1);
+        this._grid.attach(this._cookieswitch, 1, 1, 1, 1);
+        this._grid.attach(this._cookieLabel, 0, 2, 1, 1);
 
         // Add the grid to the window
         this._window.add (this._grid);
@@ -63,9 +76,15 @@ const WelcomeToTheGrid = new Lang.Class({
         this._window.show_all();
     },
 
+    _cookieDispenser: function() {
+
+    },
+
     _getACookie: function() {
-        cookies ++;
-        this._cookieLabel.set_label("Number of cookies: " + cookies);
+        if (this._cookieswitch.get_active()) {
+            cookies ++;
+            this._cookieLabel.set_label("Number of cookies: " + cookies);
+        }
     }
 
 });
